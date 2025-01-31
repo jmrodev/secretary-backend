@@ -6,15 +6,18 @@ import {
   updateItem,
   deleteItem,
 } from "../controllers/users.js";
-import checkOrigin from "../middlewares/origin.js";
+import validateToken from "../middlewares/auth.js";
+import logHeaders from "../middlewares/logHeaders.js";
 
 const router = express.Router();
+
+router.use(logHeaders);
 
 router.get("/", getItems);
 
 router.get("/:id", getItem);
 
-router.post("/", checkOrigin, createItem);
+router.post("/", validateToken, createItem);
 
 router.put("/:id", updateItem);
 

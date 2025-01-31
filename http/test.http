@@ -5,11 +5,12 @@ Content-Type: application/json
 ### POST request
 POST http://localhost:3002/api/users
 Content-Type: application/json
+Authorization: Bearer YOUR_BEARER_TOKEN
 
 {
-  "userName": "exampleUser4",
+  "userName": "exampleUser6",
   "name": "Example Name",
-  "email": "example4@example.com",
+  "email": "example6@example.com",
   "password": "examplePassword",
   "role": "secretary",
   "lastLogin": "2025-01-31T00:00:00.000Z",
