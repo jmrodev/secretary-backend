@@ -1,19 +1,13 @@
 import httpError from "../helpers/handleErrors.js";
 import  userModel  from "../models/users.js";
 
-const getItems = (req, res) => {
-  res.send({
-    list: [
-      {
-        id: 1,
-        name: "item 1",
-      },
-      {
-        id: 2,
-        name: "item 2",
-      },
-    ],
-  });
+const getItems = async (req, res) => {
+  try {
+    const resDetail = await userModel.find({});
+    res.status(201).json({data:resDetail});
+  } catch (error) {
+    httpError(res, error); // Asegúrate de pasar res y error a httpError
+  }
 };
 
 const getItem = () => {};
@@ -46,9 +40,9 @@ const createItem = async (req,res) => {
       lockUntil,
       loginAttempts,
     });
-    res.send({ data: resDetail });
+    res.status(201).json({data:resDetail});
   } catch (error) {
-    httpError(req, error);
+    httpError(res, error); // Asegúrate de pasar res y error a httpError
   }
 };
 

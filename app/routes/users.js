@@ -6,6 +6,7 @@ import {
   updateItem,
   deleteItem,
 } from "../controllers/users.js";
+import checkOrigin from "../middlewares/origin.js";
 
 const router = express.Router();
 
@@ -13,7 +14,7 @@ router.get("/", getItems);
 
 router.get("/:id", getItem);
 
-router.post("/", createItem);
+router.post("/", checkOrigin, createItem);
 
 router.put("/:id", updateItem);
 
