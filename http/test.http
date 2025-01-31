@@ -1,0 +1,31 @@
+### GET request
+GET http://localhost:3002/api/users
+Content-Type: application/json
+
+### POST request
+POST http://localhost:3002/api/users
+Content-Type: application/json
+
+{
+  "userName": "exampleUser",
+  "name": "Example Name",
+  "email": "example@example.com",
+  "password": "examplePassword",
+  "role": "secretary",
+  "lastLogin": "2025-01-31T00:00:00.000Z",
+  "isLocked": false,
+  "lockUntil": null,
+  "loginAttempts": 0
+}
+
+### PUT request
+PUT http://localhost:3002/api/resource/1
+Content-Type: application/json
+
+{
+  "key": "new value"
+}
+
+### DELETE request
+DELETE http://localhost:3002/api/resource/1
+Content-Type: application/json
