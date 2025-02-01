@@ -3,15 +3,11 @@ POST http://localhost:3002/api/users/register
 Content-Type: application/json
 
 {
-  "userName": "newUser",
-  "name": "New User",
+  "userName": "jmro", 
+  "name": "Juan Marcelo Rodriguez",
   "email": "newuser@example.com",
   "password": "newPassword",
-  "role": "secretary",
-  "lastLogin": "2025-01-31T00:00:00.000Z",
-  "isLocked": false,
-  "lockUntil": null,
-  "loginAttempts": 0
+  "role": "secretary"
 }
 
 ### POST request to login
@@ -19,7 +15,7 @@ POST http://localhost:3002/api/users/login
 Content-Type: application/json
 
 {
-  "userName": "newUser",
+  "userName": "jmro",
   "password": "newPassword"
 }
 
@@ -41,30 +37,14 @@ GET http://localhost:3002/api/users/1
 Content-Type: application/json
 Authorization: Bearer YOUR_BEARER_TOKEN
 
-### POST request to create a new user
-POST http://localhost:3002/api/users
-Content-Type: application/json
-Authorization: Bearer YOUR_BEARER_TOKEN
-
-{
-  "userName": "exampleUser8",
-  "name": "Example Name",
-  "email": "example8@example.com",
-  "password": "examplePassword",
-  "role": "secretary",
-  "lastLogin": "2025-01-31T00:00:00.000Z",
-  "isLocked": false,
-  "lockUntil": null,
-  "loginAttempts": 0
-}
-
 ### PUT request to update a user
-PUT http://localhost:3002/api/users/1
+PUT http://localhost:3002/api/users/679e2f3fe9aa3966d22c8ce0
 Content-Type: application/json
 Authorization: Bearer YOUR_BEARER_TOKEN
 
 {
-  "name": "Updated Name",
+  "userName": "jpcasares",
+  "name": "Juan Pedro Casares",
   "email": "updatedemail@example.com"
 }
 

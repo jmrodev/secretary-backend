@@ -7,6 +7,7 @@ import {
   deleteUser,
   getUserByUserName
 } from '../repositories/usersRepository.js'
+import { getCurrentDateTimeISO } from '../helpers/dateTimeHelper.js'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 
@@ -79,14 +80,30 @@ const loginUser = async (req, res) => {
   try {
     const { userName, password } = req.body
     const user = await getUserByUserName(userName)
+
     if (!user) {
       return res.status(404).json({ message: 'User not found' })
     }
+
     const isMatch = await bcrypt.compare(password, user.password)
     if (!isMatch) {
+      const loginAttempts = user.loginAttempts + 1
+      const isLocked = loginAttempts > 3
+      const lockUntil = isLocked ? getCurrentDateTimeISO() : null
+      await updateUser(user._id, { loginAttempts, isLocked, lockUntil })
       return res.status(401).json({ message: 'Invalid credentials' })
+    } else {
+      const loginAttempts = 0
+      const isLocked = false
+      const lockUntil = null
+      await updateUser(user._id, { loginAttempts, isLocked, lockUntil })
     }
+
     const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY, { expiresIn: '1h' })
+
+    const lastLogin = getCurrentDateTimeISO()
+    await updateUser(user._id, { lastLogin })
+
     res.status(200).json({ token })
   } catch (error) {
     httpError(res, error)
