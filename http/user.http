@@ -1,0 +1,74 @@
+### POST request to register a new user
+POST http://localhost:3002/api/users/register
+Content-Type: application/json
+
+{
+  "userName": "newUser",
+  "name": "New User",
+  "email": "newuser@example.com",
+  "password": "newPassword",
+  "role": "secretary",
+  "lastLogin": "2025-01-31T00:00:00.000Z",
+  "isLocked": false,
+  "lockUntil": null,
+  "loginAttempts": 0
+}
+
+### POST request to login
+POST http://localhost:3002/api/users/login
+Content-Type: application/json
+
+{
+  "userName": "newUser",
+  "password": "newPassword"
+}
+
+### POST request to logout (if applicable)
+POST http://localhost:3002/api/users/logout
+Content-Type: application/json
+Authorization: Bearer YOUR_BEARER_TOKEN
+
+### GET request health check
+GET http://localhost:3002/api/health
+
+### GET request for all users
+GET http://localhost:3002/api/users
+Content-Type: application/json
+Authorization: Bearer YOUR_BEARER_TOKEN
+
+### GET request for a specific user
+GET http://localhost:3002/api/users/1
+Content-Type: application/json
+Authorization: Bearer YOUR_BEARER_TOKEN
+
+### POST request to create a new user
+POST http://localhost:3002/api/users
+Content-Type: application/json
+Authorization: Bearer YOUR_BEARER_TOKEN
+
+{
+  "userName": "exampleUser8",
+  "name": "Example Name",
+  "email": "example8@example.com",
+  "password": "examplePassword",
+  "role": "secretary",
+  "lastLogin": "2025-01-31T00:00:00.000Z",
+  "isLocked": false,
+  "lockUntil": null,
+  "loginAttempts": 0
+}
+
+### PUT request to update a user
+PUT http://localhost:3002/api/users/1
+Content-Type: application/json
+Authorization: Bearer YOUR_BEARER_TOKEN
+
+{
+  "name": "Updated Name",
+  "email": "updatedemail@example.com"
+}
+
+### DELETE request to delete a user
+DELETE http://localhost:3002/api/users/1
+Content-Type: application/json
+Authorization: Bearer YOUR_BEARER_TOKEN

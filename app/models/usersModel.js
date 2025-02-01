@@ -1,49 +1,49 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose'
 
 const userSchema = new mongoose.Schema(
   {
     userName: {
       type: String,
       required: true,
-      unique: true,
+      unique: true
     },
     name: {
       type: String,
-      required: true,
+      required: true
     },
     email: {
       type: String,
       required: true,
-      unique: true,
+      unique: true
     },
     password: {
       type: String,
-      required: true,
+      required: true
     },
     role: {
       type: String,
-      default: "secretary",
+      default: 'secretary'
     },
     lastLogin: {
-      type: Date,
+      type: Date
     },
     isLocked: {
       type: Boolean,
-      default: false,
+      default: false
     },
     lockUntil: {
-      type: Date,
+      type: Date
     },
     loginAttempts: {
       type: Number,
-      default: 0,
-    },
+      default: 0
+    }
   },
   {
-    timestamps: true,
+    timestamps: true
   }
-);
+)
 
-const UserModel = mongoose.model("Users", userSchema);
+const UserModel = mongoose.model('Users', userSchema)
 
-export default UserModel;
+export default UserModel
