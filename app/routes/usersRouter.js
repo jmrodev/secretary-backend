@@ -15,25 +15,13 @@ import logHeaders from '../middlewares/logMiddleware.js'
 const router = express.Router()
 
 router.use(logHeaders)
-
-router.get('/', getItems)
-
-router.get('/:id', getItem)
-
-router.post(
-  '/',
-  //  validateToken,
-  createItem
-)
-
-router.put('/:id', updateItem)
-
-router.delete('/:id', deleteItem)
-
-router.post('/register', registerUser)
-
 router.post('/login', loginUser)
-
 router.post('/logout', logoutUser)
+router.get('/', validateToken, getItems)
+router.get('/:id', validateToken, getItem)
+router.post('/', validateToken, createItem)
+router.put('/:id', validateToken, updateItem)
+router.delete('/:id', validateToken, deleteItem)
+router.post('/register', validateToken, registerUser)
 
 export default router

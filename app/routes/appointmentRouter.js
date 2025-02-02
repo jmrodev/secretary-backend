@@ -6,7 +6,7 @@ import {
   updateItem,
   deleteItem
 } from '../controllers/appointmentController.js'
-import validateToken from '../middlewares/authMiddleware.js'
+// import validateToken from '../middlewares/authMiddleware.js'
 import logHeaders from '../middlewares/logMiddleware.js'
 
 const router = express.Router()

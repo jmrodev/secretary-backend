@@ -4,10 +4,14 @@ import dbconnect from './config/mongo.js'
 import expressConfig from './config/express.js'
 import listRoutes from './app/middlewares/routesMiddleware.js'
 import mongoose from 'mongoose'
+import cookieParser from 'cookie-parser'
+
 mongoose.set('debug', true)
 
 dotenv.config()
 const app = express()
+app.use(cookieParser())
+
 const port = process.env.PORT
 
 expressConfig(app)
