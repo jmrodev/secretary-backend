@@ -3,11 +3,11 @@ POST http://localhost:3002/api/users/register
 Content-Type: application/json
 
 {
-  "userName": "jmro", 
+  "userName": "jmro4", 
   "name": "Juan Marcelo Rodriguez",
-  "email": "newuser@example.com",
+  "email": "newuser4@example.com",
   "password": "newPassword",
-  "role": "secretary"
+  "role": "doctor"
 }
 
 ### POST request to login
@@ -15,7 +15,7 @@ POST http://localhost:3002/api/users/login
 Content-Type: application/json
 
 {
-  "userName": "jpcasares",
+  "userName": "jmro2",
   "password": "newPassword"
 }
 
@@ -32,19 +32,19 @@ GET http://localhost:3002/api/users
 Content-Type: application/json
 
 ### GET request for a specific user
-GET http://localhost:3002/api/users/1
+GET http://localhost:3002/api/users/679e2f3fe9aa3966d22c8ce0
 Content-Type: application/json
 
 ### PUT request to update a user
-PUT http://localhost:3002/api/users/679e2f3fe9aa3966d22c8ce0
+PUT http://localhost:3002/api/users/67a17b43c584e8c9f1a89789
 Content-Type: application/json
 
 {
-  "userName": "jpcasares",
+  "userName": "jpcasa",
   "name": "Juan Pedro Casares",
-  "email": "updatedemail@example.com"
+  "email": "updatedemail3@example.com"
 }
 
 ### DELETE request to delete a user
-DELETE http://localhost:3002/api/users/1
+DELETE http://localhost:3002/api/users/67a17b43c584e8c9f1a89789
 Content-Type: application/json

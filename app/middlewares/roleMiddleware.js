@@ -1,6 +1,6 @@
 import { PERMISSIONS } from '../../config/role.js'
 
-export const authorize = (resource, action) => {
+const roleMiddleware = (resource, action) => {
   return (req, res, next) => {
     try {
       if (!req.user?.role) {
@@ -34,7 +34,6 @@ export const authorize = (resource, action) => {
         })
       }
 
-      // Extender información de auditoría
       req.audit = {
         ...req.audit,
         role: userRole,
@@ -52,3 +51,5 @@ export const authorize = (resource, action) => {
     }
   }
 }
+
+export default roleMiddleware

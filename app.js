@@ -5,6 +5,7 @@ import expressConfig from './config/express.js'
 import listRoutes from './app/middlewares/routesMiddleware.js'
 import mongoose from 'mongoose'
 import cookieParser from 'cookie-parser'
+import errorMiddleware from './app/middlewares/errorMiddleware.js'
 
 mongoose.set('debug', true)
 
@@ -18,6 +19,8 @@ expressConfig(app)
 dbconnect()
 
 listRoutes(app)
+
+app.use(errorMiddleware)
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`)

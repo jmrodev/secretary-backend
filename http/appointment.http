@@ -7,13 +7,12 @@ GET http://localhost:3002/api/appointment
 Content-Type: application/json
 
 ### GET request for a specific appointment
-GET http://localhost:3002/api/appointment/679d6284c1d9be6b5fb221fc
+GET http://localhost:3002/api/appointment/679e1f603e0a7536226b6f5b
 Content-Type: application/json
 
 ### POST request to create a new appointment
 POST http://localhost:3002/api/appointment
 Content-Type: application/json
-Authorization: Bearer'secretkey'
 
 {
   "patient": "John Doe",
@@ -24,19 +23,18 @@ Authorization: Bearer'secretkey'
 }
 
 ### PUT request to update an appointment
-PUT http://localhost:3002/api/appointment/1
+PUT http://localhost:3002/api/appointment/679d627fc1d9be6b5fb221fa
 Content-Type: application/json
-Authorization: Bearer YOUR_BEARER_TOKEN
 
 {
-  "title": "Updated Doctor Appointment",
-  "description": "Updated annual check-up",
-  "date": "2025-01-31T11:00:00.000Z",
-  "location": "Updated Clinic",
-  "status": "rescheduled"
+  "patient": "John Doe 4444444",
+  "doctor": "Dr. Smith",
+  "date" : "2025-01-31T10:00:00.000Z",
+  "time" : "10:00 AM",
+  "status" : "scheduled"
 }
 
+
 ### DELETE request to delete an appointment
-DELETE http://localhost:3002/api/appointment/679d6284c1d9be6b5fb221fc
+DELETE http://localhost:3002/api/appointment/679d627fc1d9be6b5fb221fa
 Content-Type: application/json
-Authorization: Bearer YOUR_BEARER_TOKEN
