@@ -1,4 +1,5 @@
 import chalk from 'chalk'
+
 const logMiddleware = (req, res, next) => {
   console.log(chalk.blue(`[${new Date().toISOString()}] ${req.method} ${req.originalUrl}`))
 

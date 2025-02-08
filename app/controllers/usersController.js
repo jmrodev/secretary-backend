@@ -39,15 +39,15 @@ const getItem = async (req, res, next) => {
     if (!resDetail) {
       return res.status(404).json({ message: 'User not found' })
     }
-    res.status(200).json(
-      {
-        data: resDetail,
-        message: 'User found',
-        success: true
-
-      }
-    )
+    res.status(200).json({
+      data: resDetail,
+      message: 'User found',
+      success: true
+    })
   } catch (error) {
+    if (error.message === 'Invalid ID format') {
+      return res.status(400).json({ message: 'Invalid ID format', success: false })
+    }
     httpError(res, error)
     next(error)
   }
