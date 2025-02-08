@@ -1,7 +1,7 @@
 import appointmentModel from '../models/appointmentModel.js'
 
-const getAllAppointments = async () => {
-  return await appointmentModel.find({})
+const getAllAppointments = () => {
+  return appointmentModel.find({})  // Return query without executing
 }
 
 const getAppointmentById = async (id) => {

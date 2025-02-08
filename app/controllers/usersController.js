@@ -1,3 +1,4 @@
+import userModel from '../models/usersModel.js'
 import {
   getAllUsers,
   getUserById,
@@ -13,16 +14,21 @@ import httpError from '../helpers/handleErrors.js'
 
 const getItems = async (req, res, next) => {
   try {
-    const resDetail = await getAllUsers()
-    res.status(200).json(
-      {
-        data: resDetail,
-        message: 'Users found',
-        success: true
-      }
-    )
+    const page = parseInt(req.query.page) || 1
+    const limit = parseInt(req.query.limit) || 10
+    const skip = (page - 1) * limit
+
+    const { users, total } = await getAllUsers(skip, limit)
+
+    res.status(200).json({
+      data: users,
+      message: 'Users found',
+      success: true,
+      total,
+      page,
+      totalPages: Math.ceil(total / limit)
+    })
   } catch (error) {
-    httpError(res, error)
     next(error)
   }
 }
@@ -48,12 +54,6 @@ const getItem = async (req, res, next) => {
 }
 
 const createItem = async (req, res, next) => {
-  const appointmentDate = req.body.date
-  const appointmentTime = req.body.time
-  const existingAppointment = await getUserByUserName(appointmentDate, appointmentTime)
-  if (existingAppointment) {
-    return res.status(409).json({ message: 'Appointment time is already booked' })
-  }
   try {
     const resDetail = await createUser(req.body)
     res.status(201).json({
@@ -63,6 +63,7 @@ const createItem = async (req, res, next) => {
     })
   } catch (error) {
     httpError(res, error)
+    next(error)
   }
 }
 

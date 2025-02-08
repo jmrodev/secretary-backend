@@ -1,7 +1,9 @@
 import userModel from '../models/usersModel.js'
 
-const getAllUsers = async () => {
-  return await userModel.find({})
+const getAllUsers = async (skip = 0, limit = 10) => {
+  const users = await userModel.find({}).skip(skip).limit(limit)
+  const total = await userModel.countDocuments()
+  return { users, total }
 }
 
 const getUserById = async (id) => {

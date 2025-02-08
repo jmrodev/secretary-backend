@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node --watch app.js"
+    "start": "node --watch app.js",
+    "generate-fake-data": "node app/utils/generateFakeData.js"
   },
   "keywords": [],
   "author": "",
@@ -14,10 +15,12 @@
   "dependencies": {
     "@js-temporal/polyfill": "^0.4.4",
     "bcrypt": "^5.1.1",
+    "chalk": "^5.4.1",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
+    "faker": "^6.6.6",
     "helmet": "^8.0.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.9.5"
@@ -26,6 +29,7 @@
     "extends": "standard"
   },
   "devDependencies": {
+    "@faker-js/faker": "^9.4.0",
     "standard": "^17.1.2"
   }
 }

@@ -14,11 +14,37 @@ const router = express.Router()
 
 router.use(logHeaders)
 
-// Aplicar el middleware de validación de token y de roles
-router.get('/', validateToken, roleMiddleware('appointments', 'read'), getItems)
-router.get('/:id', validateToken, roleMiddleware('appointments', 'read'), getItem)
-router.post('/', validateToken, roleMiddleware('appointments', 'create'), createItem)
-router.put('/:id', validateToken, roleMiddleware('appointments', 'update'), updateItem)
-router.delete('/:id', validateToken, roleMiddleware('appointments', 'delete'), deleteItem)
+router.get(
+  '/', validateToken,
+  roleMiddleware('appointments', 'read'),
+  getItems
+)
+
+router.get(
+  '/:id', validateToken,
+  roleMiddleware('appointments', 'read'),
+  getItem
+)
+
+router.post(
+  '/',
+  validateToken,
+  roleMiddleware('appointments', 'create'),
+  createItem
+)
+
+router.put(
+  '/:id',
+  validateToken,
+  roleMiddleware('appointments', 'update'),
+  updateItem
+)
+
+router.delete(
+  '/:id',
+  validateToken,
+  roleMiddleware('appointments', 'delete'),
+  deleteItem
+)
 
 export default router

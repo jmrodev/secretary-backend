@@ -8,12 +8,19 @@ import {
 } from '../repositories/appointmentRepository.js'
 
 const getItems = async (req, res) => {
+  const { page = 1, limit = 10 } = req.query
+  const skip = (page - 1) * limit
+
   try {
-    const resDetail = await getAllAppointments()
+    const resDetail = await getAllAppointments().skip(skip).limit(limit)
+    const total = await getAllAppointments().countDocuments()
     res.status(200).json({
       data: resDetail,
       message: 'Appointments found',
-      success: true
+      success: true,
+      total,
+      page,
+      totalPages: Math.ceil(total / limit)
     })
   } catch (error) {
     httpError(res, error)
