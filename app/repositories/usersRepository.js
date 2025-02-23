@@ -1,6 +1,10 @@
 import userModel from '../models/usersModel.js'
 import mongoose from 'mongoose' // Import mongoose to use ObjectId
 
+const getCurrentUser = async (userId) => {
+  return await userModel.findById(userId)
+}
+
 const getAllUsers = async (skip = 0, limit = 10) => {
   const users = await userModel.find({}).skip(skip).limit(limit)
   const total = await userModel.countDocuments()
@@ -31,4 +35,4 @@ const deleteUser = async (id) => {
   return await userModel.findByIdAndDelete(id)
 }
 
-export { getAllUsers, getUserById, getUserByUserName, createUser, updateUser, deleteUser }
+export { getCurrentUser, getAllUsers, getUserById, getUserByUserName, createUser, updateUser, deleteUser }

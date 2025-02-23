@@ -1,16 +1,9 @@
-### POST request to register a new user
-POST http://localhost:3002/api/users/register
-Content-Type: application/json
+### Health check
+GET http://localhost:3002/api/health
 
-{
-  "userName": "jmro4", 
-  "name": "Juan Marcelo Rodriguez",
-  "email": "newuser4@example.com",
-  "password": "newPassword",
-  "role": "doctor"
-}
 
-### POST request to login
+
+### Login
 POST http://localhost:3002/api/users/login
 Content-Type: application/json
 
@@ -18,42 +11,42 @@ Content-Type: application/json
   "userName": "jmro2",
   "password": "newPassword"
 }
-
-###
-POST http://localhost:3002/api/users/
-Content-Type: application/json
-
-
-### POST request to logout (if applicable)
-POST http://localhost:3002/api/users/logout
-Content-Type: application/json
-Authorization: Bearer YOUR_BEARER_TOKEN
-
-### GET request health check
-GET http://localhost:3002/api/health
-
-### GET request for all users
-GET http://localhost:3002/api/users
-Content-Type: application/json
-
-### GET request for all users with pagination
-GET http://localhost:3002/api/users?page=1&limit=3
-Content-Type: application/json
-
-### GET request for a specific user
-GET http://localhost:3002/api/users/679e2f3fe9aa3966d22c8ce0
-Content-Type: application/json
-
-### PUT request to update a user
-PUT http://localhost:3002/api/users/67a17b43c584e8c9f1a89789
+### Register new user
+POST http://localhost:3002/api/users/register
 Content-Type: application/json
 
 {
-  "userName": "jpcasa",
-  "name": "Juan Pedro Casares",
-  "email": "updatedemail3@example.com"
+  "userName": "testuser1",
+  "name": "Test User",
+  "email": "test1@example.com",
+  "password": "password123",
+  "role": "user"
+}
+### Get all users (protected, admin only)
+GET http://localhost:3002/api/users
+Content-Type: application/json
+
+### Get users with pagination
+GET http://localhost:3002/api/users?page=1&limit=2
+Content-Type: application/json
+
+### Get specific user
+GET http://localhost:3002/api/users/{{userId}}
+Content-Type: application/json
+
+### Update user
+PUT http://localhost:3002/api/users/{{userId}}
+Content-Type: application/json
+
+{
+  "name": "Updated Name",
+  "email": "updated@example.com"
 }
 
-### DELETE request to delete a user
-DELETE http://localhost:3002/api/users/67a17b43c584e8c9f1a89789
+### Delete user
+DELETE http://localhost:3002/api/users/{{userId}}
+Content-Type: application/json
+
+### Logout
+POST http://localhost:3002/api/users/logout
 Content-Type: application/json

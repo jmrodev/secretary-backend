@@ -1,16 +1,17 @@
-import userModel from '../models/usersModel.js'
 import {
   getAllUsers,
   getUserById,
   createUser,
   updateUser,
   deleteUser,
-  getUserByUserName
+  getUserByUserName,
+  getCurrentUser
 } from '../repositories/usersRepository.js'
 import { getCurrentDateTimeISO, addMillisecondsToCurrentDateTime } from '../helpers/dateTimeHelper.js'
 import bcrypt from 'bcrypt'
-import jwt from 'jsonwebtoken'
 import httpError from '../helpers/handleErrors.js'
+import { generateToken, setToken } from '../helpers/token.js'
+
 
 const getItems = async (req, res, next) => {
   try {
@@ -161,24 +162,9 @@ const loginUser = async (req, res, next) => {
       return res.status(401).json({ message: 'Invalid credentials' })
     }
 
-    const token = jwt.sign(
-      {
-        id: user._id,
-        userName: user.userName,
-        role: user.role
-      },
-      process.env.SECRET_KEY,
-      {
-        expiresIn: '1h'
-      }
-    )
+    const token = generateToken(user)
 
-    res.cookie('token', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 3600000,
-      sameSite: 'strict'
-    })
+    setToken(res, token)
 
     const lastLogin = getCurrentDateTimeISO()
     await updateUser(user._id, { lastLogin, loginAttempts: 0, isLocked: false, lockUntil: null })
@@ -186,7 +172,9 @@ const loginUser = async (req, res, next) => {
     res.status(200).json(
       {
         message: 'Login successful',
-        success: true
+        success: true,
+        token,
+        userName: user.userName
       }
     )
   } catch (error) {

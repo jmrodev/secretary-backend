@@ -67,16 +67,4 @@ router.delete(
   deleteItem
 )
 
-router.get(
-  '/current',
-  validateToken,
-  (req, res) => {
-    res.status(200).json({
-      user: req.user, // Assuming req.user is set by the validateToken middleware
-      message: 'Current user retrieved successfully',
-      success: true
-    })
-  }
-)
-
 export default router

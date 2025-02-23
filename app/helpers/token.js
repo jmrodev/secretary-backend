@@ -21,13 +21,16 @@ const generateToken = (user) => {
 }
 
 const setToken = (res, token) => {
+  console.log('setToken')
+  console.log(token)
+
   res.cookie('token',
     token,
     {
       httpOnly: true,
       maxAge: TOKEN_EXPIRATION,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict'
+      sameSite: 'None'
     }
   )
 }

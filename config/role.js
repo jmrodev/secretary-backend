@@ -2,6 +2,7 @@ export const ROLES = {
   ADMIN: 'admin',
   DOCTOR: 'doctor',
   SECRETARY: 'secretary',
+  PATIENT: 'patient',
   GUEST: 'guest'
 }
 
@@ -84,6 +85,6 @@ export const PERMISSIONS = {
   }
 }
 
-export function checkPermission (role, resource, action) {
+export function checkPermission(role, resource, action) {
   return PERMISSIONS[role]?.[resource]?.[action] || false
 }

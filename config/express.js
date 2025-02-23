@@ -29,8 +29,8 @@ const expressConfig = (app) => {
 
   // 404 handler for undefined routes
   app.use((req, res) => {
-    res.status(404).json({ 
-      success: false, 
+    res.status(404).json({
+      success: false,
       message: `Path ${req.originalUrl} not found`
     })
   })
