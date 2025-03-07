@@ -1,42 +1,35 @@
-import { PERMISSIONS } from '../../config/role.js'
+import { PERMISSIONS, checkPermission } from '../../config/role.js'
 
 const roleMiddleware = (resource, action) => {
   return (req, res, next) => {
     try {
-      if (!req.user?.role) {
+      const user = req.user
+      if (!user) {
         return res.status(401).json({
           error: 'Unauthorized',
           message: 'Usuario o rol no encontrado'
         })
       }
 
-      const userRole = req.user.role
-      const rolePermissions = PERMISSIONS[userRole]
-
-      if (!rolePermissions) {
-        return res.status(403).json({
-          error: 'Forbidden',
-          message: 'Rol no válido'
+      const role = user.role
+      if (!role) {
+        return res.status(401).json({
+          error: 'Unauthorized',
+          message: 'Usuario o rol no encontrado'
         })
       }
 
-      const hasPermission = rolePermissions[resource]?.[action]
-
+      const hasPermission = checkPermission(role, resource, action)
       if (!hasPermission) {
-        const requiredRole = Object.keys(PERMISSIONS).find(role =>
-          PERMISSIONS[role][resource]?.[action]
-        )
-
         return res.status(403).json({
           error: 'Forbidden',
-          message: `No tienes permiso para ${action} en ${resource}`,
-          requiredRole
+          message: 'No tiene permiso para realizar esta acción'
         })
       }
 
       req.audit = {
         ...req.audit,
-        role: userRole,
+        role: user.role,
         action,
         resource
       }

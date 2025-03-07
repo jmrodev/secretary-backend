@@ -2,9 +2,6 @@ import mongoose from 'mongoose'
 import dotenv from 'dotenv'
 import { faker } from '@faker-js/faker'
 import { createFakeUserDirect, createFakeAppointmentDirect } from './fakeDataController.js'
-import { createItem as createUser } from '../controllers/usersController.js'
-import { createItem as createAppointment } from '../controllers/appointmentController.js'
-
 dotenv.config()
 
 const dbconnect = async () => {
@@ -22,15 +19,6 @@ const getRandomInt = (min, max) => {
   min = Math.ceil(min)
   max = Math.floor(max)
   return Math.floor(Math.random() * (max - min + 1)) + min
-}
-
-const getRandomString = (length) => {
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-  let result = ''
-  for (let i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * characters.length))
-  }
-  return result
 }
 
 const createFakeUser = async () => {
@@ -71,10 +59,14 @@ dbconnect().then(() => {
   generateFakeData()
     .then(() => {
       console.log('Fake data generated')
+      return deleteUsersExceptJmro()
+    })
+    .then(() => {
+      console.log('Users deleted except those with username starting with "jmro"')
       process.exit()
     })
     .catch((error) => {
-      console.error('Error generating fake data:', error)
+      console.error('Error:', error)
       process.exit(1)
     })
 })

@@ -1,12 +1,10 @@
 import jwt from 'jsonwebtoken'
 
 const validateToken = (req, res, next) => {
-  const token = req.cookies.token
-
-  console.log('Token received:', token) // Debugging line
-
+  const authHeader = req.headers.authorization
+  const token = authHeader && authHeader.split(' ')[1]
   if (!token) {
-    return res.status(401).json({ message: 'No token provided' })
+    return res.status(403).send({ message: 'No token provided' })
   }
 
   try {
@@ -15,7 +13,6 @@ const validateToken = (req, res, next) => {
 
     next()
   } catch (error) {
-    console.error('Token verification error:', error) // Debugging line
     return res.status(401).json({ message: 'Invalid token' })
   }
 }

@@ -1,19 +1,16 @@
 import {
   getAllUsers,
-  getUserById,
   createUser,
   updateUser,
   deleteUser,
-  getUserByUserName,
-  getCurrentUser
+  getUserByUserName
 } from '../repositories/usersRepository.js'
 import { getCurrentDateTimeISO, addMillisecondsToCurrentDateTime } from '../helpers/dateTimeHelper.js'
 import bcrypt from 'bcrypt'
 import httpError from '../helpers/handleErrors.js'
 import { generateToken, setToken } from '../helpers/token.js'
 
-
-const getItems = async (req, res, next) => {
+const getUsersController = async (req, res, next) => {
   try {
     const page = parseInt(req.query.page) || 1
     const limit = parseInt(req.query.limit) || 10
@@ -34,9 +31,9 @@ const getItems = async (req, res, next) => {
   }
 }
 
-const getItem = async (req, res, next) => {
+const getUserController = async (req, res, next) => {
   try {
-    const resDetail = await getUserById(req.params.id)
+    const resDetail = await getUserByUserName(req.params.id)
     if (!resDetail) {
       return res.status(404).json({ message: 'User not found' })
     }
@@ -54,12 +51,12 @@ const getItem = async (req, res, next) => {
   }
 }
 
-const createItem = async (req, res, next) => {
+const createUserController = async (req, res, next) => {
   try {
     const resDetail = await createUser(req.body)
     res.status(201).json({
       data: resDetail,
-      message: 'Usuario creado',
+      message: 'User created',
       success: true
     })
   } catch (error) {
@@ -68,7 +65,7 @@ const createItem = async (req, res, next) => {
   }
 }
 
-const updateItem = async (req, res, next) => {
+const updateUserController = async (req, res, next) => {
   try {
     const resDetail = await updateUser(req.params.id, req.body)
     if (!resDetail) {
@@ -86,7 +83,7 @@ const updateItem = async (req, res, next) => {
   }
 }
 
-const deleteItem = async (req, res, next) => {
+const deleteUserController = async (req, res, next) => {
   try {
     const resDetail = await deleteUser(req.params.id)
     if (!resDetail) {
@@ -104,7 +101,7 @@ const deleteItem = async (req, res, next) => {
   }
 }
 
-const registerUser = async (req, res, next) => {
+const registerUserController = async (req, res, next) => {
   try {
     const { userName, name, email, password, role } = req.body
     const hashedPassword = await bcrypt.hash(password, 10)
@@ -128,27 +125,23 @@ const registerUser = async (req, res, next) => {
   }
 }
 
-const loginUser = async (req, res, next) => {
+const loginUserController = async (req, res, next) => {
   try {
     const { userName, password } = req.body
 
     const user = await getUserByUserName(userName)
     if (!user) {
-      return res.status(404).json(
-        {
-          message: 'User not found',
-          success: false
-        }
-      )
+      return res.status(404).json({
+        message: 'User not found',
+        success: false
+      })
     }
 
     if (user.isLocked && user.lockUntil > getCurrentDateTimeISO()) {
-      return res.status(401).json(
-        {
-          message: 'User is locked. Try again later.',
-          success: false
-        }
-      )
+      return res.status(401).json({
+        message: 'User is locked. Try again later.',
+        success: false
+      })
     }
 
     const isMatch = await bcrypt.compare(password, user.password)
@@ -162,28 +155,27 @@ const loginUser = async (req, res, next) => {
       return res.status(401).json({ message: 'Invalid credentials' })
     }
 
-    const token = generateToken(user)
+    const token = generateToken(user) // Ensure the user object includes the role
 
     setToken(res, token)
 
     const lastLogin = getCurrentDateTimeISO()
     await updateUser(user._id, { lastLogin, loginAttempts: 0, isLocked: false, lockUntil: null })
 
-    res.status(200).json(
-      {
-        message: 'Login successful',
-        success: true,
-        token,
-        userName: user.userName
-      }
-    )
+    // Send the response to the frontend
+    res.status(200).json({
+      message: 'Login successful',
+      success: true,
+      token,
+      user
+    })
   } catch (error) {
     httpError(res, error)
     next(error)
   }
 }
 
-const logoutUser = async (req, res, next) => {
+const logoutUserController = async (req, res, next) => {
   try {
     res.clearCookie('token')
     res.status(200).json(
@@ -198,4 +190,4 @@ const logoutUser = async (req, res, next) => {
   }
 }
 
-export { getItems, getItem, createItem, updateItem, deleteItem, registerUser, loginUser, logoutUser }
+export { getUsersController, getUserController, createUserController, updateUserController, deleteUserController, registerUserController, loginUserController, logoutUserController }

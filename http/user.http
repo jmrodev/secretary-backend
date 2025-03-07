@@ -1,7 +1,6 @@
 ### Health check
 GET http://localhost:3002/api/health
-
-
+Content-Type: application/json
 
 ### Login
 POST http://localhost:3002/api/users/login
@@ -11,6 +10,14 @@ Content-Type: application/json
   "userName": "jmro2",
   "password": "newPassword"
 }
+
+### Guardar la cookie en una variable
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3OWZhZDM3YzI4NTcxNzRhOGFkOTI3MyIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc0MDUzNjk0MiwiZXhwIjoxNzQwNTM3NTQyfQ.h8XDOX1gc7xMvPsVuBe32SUeGLbeC9sIwaqZAZ4tTuc
+### Get all users (protected, admin only)
+GET http://localhost:3002/api/users
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
 ### Register new user
 POST http://localhost:3002/api/users/register
 Content-Type: application/json
@@ -22,21 +29,21 @@ Content-Type: application/json
   "password": "password123",
   "role": "user"
 }
-### Get all users (protected, admin only)
-GET http://localhost:3002/api/users
-Content-Type: application/json
 
 ### Get users with pagination
 GET http://localhost:3002/api/users?page=1&limit=2
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 ### Get specific user
-GET http://localhost:3002/api/users/{{userId}}
+GET http://localhost:3002/api/users/jmro
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 ### Update user
 PUT http://localhost:3002/api/users/{{userId}}
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
   "name": "Updated Name",
@@ -46,7 +53,14 @@ Content-Type: application/json
 ### Delete user
 DELETE http://localhost:3002/api/users/{{userId}}
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 ### Logout
 POST http://localhost:3002/api/users/logout
 Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### Get user by name
+GET http://localhost:3002/api/users/name/jmro2
+Content-Type: application/json
+Authorization: Bearer {{token}}

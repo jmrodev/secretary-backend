@@ -1,13 +1,13 @@
 import express from 'express'
 import {
-  getItems,
-  getItem,
-  createItem,
-  updateItem,
-  deleteItem,
-  loginUser,
-  logoutUser,
-  registerUser
+  getUsersController,
+  getUserController,
+  createUserController,
+  updateUserController,
+  deleteUserController,
+  loginUserController,
+  logoutUserController,
+  registerUserController
 } from '../controllers/usersController.js'
 import validateToken from '../middlewares/authMiddleware.js'
 import logHeaders from '../middlewares/logMiddleware.js'
@@ -17,54 +17,20 @@ const router = express.Router()
 
 router.use(logHeaders)
 
-router.post(
-  '/login',
-  loginUser
-)
+router.post('/login', loginUserController)
 
-router.post(
-  '/logout',
-  validateToken,
-  logoutUser
-)
+router.post('/logout', validateToken, logoutUserController)
 
-router.post(
-  '/register',
-  validateToken,
-  roleMiddleware('users', 'create'),
-  registerUser
-)
+router.post('/register', registerUserController)
 
-router.get(
-  '/',
-  validateToken,
-  roleMiddleware('users', 'read'),
-  getItems
-)
+router.get('/', validateToken, roleMiddleware('users', 'read'), getUsersController)
 
-router.get(
-  '/:id',
-  validateToken,
-  roleMiddleware('users', 'read'),
-  getItem)
+router.get('/name/:name', validateToken, roleMiddleware('users', 'read'), getUserController)
 
-router.post(
-  '/',
-  validateToken,
-  roleMiddleware('users', 'create'),
-  createItem)
+router.post('/', validateToken, roleMiddleware('users', 'create'), createUserController)
 
-router.put(
-  '/:id',
-  validateToken,
-  roleMiddleware('users', 'update'),
-  updateItem)
+router.put('/:id', validateToken, roleMiddleware('users', 'update'), updateUserController)
 
-router.delete(
-  '/:id',
-  validateToken,
-  roleMiddleware('users', 'delete'),
-  deleteItem
-)
+router.delete('/:id', validateToken, roleMiddleware('users', 'delete'), deleteUserController)
 
 export default router

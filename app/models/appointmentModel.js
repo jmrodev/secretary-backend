@@ -2,16 +2,37 @@ import mongoose from 'mongoose'
 
 const appointmentSchema = new mongoose.Schema(
   {
+
+    date:
+    {
+      type: Date,
+      required: true
+    },
+    appointmentTime:
+    {
+      type: String,
+      required: true
+    },
+    patientName:
+    {
+      type: String,
+      required: true
+    },
+    reason:
+    {
+      type: String,
+      required: true
+    },
+    notes:
+    {
+      type: String
+    },
     patient: {
       type: String,
       required: true
     },
     doctor: {
       type: String,
-      required: true
-    },
-    date: {
-      type: Date,
       required: true
     },
     time: {

@@ -10,20 +10,18 @@ const generateToken = (user) => {
   const token = jwt.sign(
     {
       id: user._id,
-      username: user.username
+      username: user.username,
+      role: user.role
     },
     SECRET_KEY,
     {
-      expiresIn: '1h'
+      expiresIn: TOKEN_EXPIRATION
     }
   )
   return token
 }
 
 const setToken = (res, token) => {
-  console.log('setToken')
-  console.log(token)
-
   res.cookie('token',
     token,
     {
@@ -35,8 +33,4 @@ const setToken = (res, token) => {
   )
 }
 
-const getToken = (req) => {
-  console.log(req.cookies)
-}
-
-export { generateToken, setToken, getToken }
+export { generateToken, setToken }
