@@ -1,40 +1,99 @@
-### GET request health check
+### Health Check
 GET http://localhost:3002/api/health
 
-
-### GET request for all appointments
-GET http://localhost:3002/api/appointment
+### Login and automatically save token
+# @name login
+POST http://localhost:3002/api/users/login
 Content-Type: application/json
 
-### GET request for a specific appointment
+{
+    "userName": "admin",
+    
+    "password": "Admin123456"
+}
+
+### Set the token from the login response
+@token = {{login.response.body.token}}
+
+### Get all appointments (with pagination)
+GET http://localhost:3002/api/appointment?page=1&limit=10
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### Get appointments by date (today)
+GET http://localhost:3002/api/appointment/by-date?year=2025&month=3&day=8
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### Get appointments by date (future date)
+GET http://localhost:3002/api/appointment/by-date?year=2025&month=12&day=25
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### Get appointments by date (invalid date - will return error)
+GET http://localhost:3002/api/appointment/by-date?year=2025&month=2&day=30
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### Get monthly appointment counts (current month)
+GET http://localhost:3002/api/appointment/monthly-counts?year=2025&month=3
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### Get monthly appointment counts (future month)
+GET http://localhost:3002/api/appointment/monthly-counts?year=2025&month=12
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### Check time slot availability (morning)
+GET http://localhost:3002/api/appointment/check-availability?date=2025-03-08T10:00:00.000Z&time=10:00
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### Check time slot availability (afternoon)
+GET http://localhost:3002/api/appointment/check-availability?date=2025-03-08T15:30:00.000Z&time=15:30
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### Check time slot availability (next week)
+GET http://localhost:3002/api/appointment/check-availability?date=2025-03-15T11:00:00.000Z&time=11:00
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### Get specific appointment by ID
 GET http://localhost:3002/api/appointment/679e1f603e0a7536226b6f5b
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
-### POST request to create a new appointment
+### Create new appointment
 POST http://localhost:3002/api/appointment
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
-  "patient": "John Doe",
-  "doctor": "Dr. Smith",
-  "date" : "2025-01-31T10:00:00.000Z",
-  "time" : "10:00 AM",
-  "status" : "scheduled"
+  "patientName": "María García",
+  "doctorName": "Dr. Juan Pérez",
+  "reason": "Consulta de seguimiento",
+  "appointmentDate": "2025-03-08T14:30:00.000Z",
+  "appointmentTime": "14:30",
+  "status": "scheduled"
 }
 
-### PUT request to update an appointment
+### Update existing appointment
 PUT http://localhost:3002/api/appointment/679d627fc1d9be6b5fb221fa
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
-  "patient": "John Doe 4444444",
-  "doctor": "Dr. Smith",
-  "date" : "2025-01-31T10:00:00.000Z",
-  "time" : "10:00 AM",
-  "status" : "scheduled"
+  "patientName": "María García",
+  "doctorName": "Dr. Juan Pérez",
+  "reason": "Consulta de seguimiento",
+  "appointmentDate": "2025-03-08T14:30:00.000Z",
+  "appointmentTime": "14:30",
+  "status": "rescheduled"
 }
 
-
-### DELETE request to delete an appointment
+### Delete appointment
 DELETE http://localhost:3002/api/appointment/679d627fc1d9be6b5fb221fa
 Content-Type: application/json
+Authorization: Bearer {{token}}

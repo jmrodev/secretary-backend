@@ -3,7 +3,7 @@ import mongoose from 'mongoose'
 const appointmentSchema = new mongoose.Schema(
   {
 
-    date:
+    appointmentDate:
     {
       type: Date,
       required: true
@@ -27,15 +27,7 @@ const appointmentSchema = new mongoose.Schema(
     {
       type: String
     },
-    patient: {
-      type: String,
-      required: true
-    },
-    doctor: {
-      type: String,
-      required: true
-    },
-    time: {
+    doctorName: {
       type: String,
       required: true
     },

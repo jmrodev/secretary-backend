@@ -1,27 +1,18 @@
 import express from 'express'
-import cookieParser from 'cookie-parser'
 import index from '../app/routes/index.js'
-import corsMiddleware from '../app/middlewares/corsMiddleware.js'
 import securityMiddleware from '../app/middlewares/securityMiddleware.js'
 import logMiddleware from '../app/middlewares/logMiddleware.js'
-import errorMiddleware from '../app/middlewares/errorMiddleware.js'
 
 const expressConfig = (app) => {
-  app.use(corsMiddleware())
-  app.use(cookieParser())
-  app.use(express.json({ limit: '10kb' }))
-  app.use(express.urlencoded({ extended: true, limit: '10kb' }))
+  // Middlewares básicos
   app.use(logMiddleware)
+
+  // Middlewares de seguridad
   const securityMiddlewares = securityMiddleware()
   securityMiddlewares.forEach((middleware) => app.use(middleware))
+
+  // Rutas de la API
   app.use('/api', index)
-  app.use((req, res) => {
-    res.status(404).json({
-      success: false,
-      message: `Path ${req.originalUrl} not found`
-    })
-  })
-  app.use(errorMiddleware)
 }
 
 export default expressConfig

@@ -3,16 +3,19 @@ GET http://localhost:3002/api/health
 Content-Type: application/json
 
 ### Login
+# @name login
 POST http://localhost:3002/api/users/login
 Content-Type: application/json
 
 {
-  "userName": "jmro2",
-  "password": "newPassword"
+  "userName": "admin",
+
+  "password": "Admin123456"
 }
 
 ### Guardar la cookie en una variable
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3OWZhZDM3YzI4NTcxNzRhOGFkOTI3MyIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc0MDUzNjk0MiwiZXhwIjoxNzQwNTM3NTQyfQ.h8XDOX1gc7xMvPsVuBe32SUeGLbeC9sIwaqZAZ4tTuc
+@token = {{login.response.body.token}}
+
 ### Get all users (protected, admin only)
 GET http://localhost:3002/api/users
 Content-Type: application/json
@@ -36,7 +39,7 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 ### Get specific user
-GET http://localhost:3002/api/users/jmro
+GET http://localhost:3002/api/users/admin
 Content-Type: application/json
 Authorization: Bearer {{token}}
 

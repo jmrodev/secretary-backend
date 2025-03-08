@@ -129,45 +129,85 @@ const loginUserController = async (req, res, next) => {
   try {
     const { userName, password } = req.body
 
+    // Validar campos requeridos
+    if (!userName?.trim()) {
+      return res.status(400).json({
+        message: 'El nombre de usuario es requerido',
+        success: false
+      })
+    }
+
+    if (!password) {
+      return res.status(400).json({
+        message: 'La contraseña es requerida',
+        success: false
+      })
+    }
+
     const user = await getUserByUserName(userName)
     if (!user) {
-      return res.status(404).json({
-        message: 'User not found',
+      return res.status(401).json({
+        message: 'Usuario o contraseña incorrectos',
         success: false
       })
     }
 
     if (user.isLocked && user.lockUntil > getCurrentDateTimeISO()) {
+      const waitMinutes = Math.ceil((new Date(user.lockUntil) - new Date()) / 60000)
       return res.status(401).json({
-        message: 'User is locked. Try again later.',
-        success: false
+        message: `Usuario bloqueado. Inténtelo nuevamente en ${waitMinutes} minutos.`,
+        success: false,
+        lockUntil: user.lockUntil
       })
     }
 
     const isMatch = await bcrypt.compare(password, user.password)
     if (!isMatch) {
-      const loginAttempts = user.loginAttempts + 1
-      const isLocked = loginAttempts > 3
+      const loginAttempts = (user.loginAttempts || 0) + 1
+      const maxAttempts = 3
+      const isLocked = loginAttempts >= maxAttempts
       const lockUntil = isLocked ? addMillisecondsToCurrentDateTime(300000) : null
 
       await updateUser(user._id, { loginAttempts, isLocked, lockUntil })
 
-      return res.status(401).json({ message: 'Invalid credentials' })
+      if (isLocked) {
+        return res.status(401).json({
+          message: 'Demasiados intentos fallidos. Usuario bloqueado por 5 minutos.',
+          success: false,
+          lockUntil
+        })
+      }
+
+      return res.status(401).json({
+        message: `Usuario o contraseña incorrectos. Le quedan ${maxAttempts - loginAttempts} intentos.`,
+        success: false
+      })
     }
 
-    const token = generateToken(user) // Ensure the user object includes the role
-
+    const token = generateToken(user)
     setToken(res, token)
 
     const lastLogin = getCurrentDateTimeISO()
-    await updateUser(user._id, { lastLogin, loginAttempts: 0, isLocked: false, lockUntil: null })
+    await updateUser(user._id, {
+      lastLogin,
+      loginAttempts: 0,
+      isLocked: false,
+      lockUntil: null
+    })
 
-    // Send the response to the frontend
+    // Enviar respuesta al frontend
     res.status(200).json({
-      message: 'Login successful',
+      message: 'Inicio de sesión exitoso',
       success: true,
       token,
-      user
+      user: {
+        id: user._id,
+        userName: user.userName,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        lastLogin: user.lastLogin
+      }
     })
   } catch (error) {
     httpError(res, error)

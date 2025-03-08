@@ -15,6 +15,13 @@ const getAppointmentsByDateController = async (req, res) => {
   const { year, month, day } = req.query
 
   try {
+    if (!year || !month || !day) {
+      return res.status(400).json({
+        message: 'Year, month, and day are required',
+        success: false
+      })
+    }
+
     const appointments = await getAppointmentsByDate(
       parseInt(year),
       parseInt(month),
@@ -27,6 +34,12 @@ const getAppointmentsByDateController = async (req, res) => {
       success: true
     })
   } catch (error) {
+    if (error.message.includes('Fecha inválida')) {
+      return res.status(400).json({
+        message: error.message,
+        success: false
+      })
+    }
     httpError(res, error)
   }
 }
@@ -35,6 +48,13 @@ const getMonthlyAppointmentCountsController = async (req, res) => {
   const { year, month } = req.query
 
   try {
+    if (!year || !month) {
+      return res.status(400).json({
+        message: 'Year and month are required',
+        success: false
+      })
+    }
+
     const counts = await getMonthlyAppointmentCounts(
       parseInt(year),
       parseInt(month)
@@ -46,6 +66,12 @@ const getMonthlyAppointmentCountsController = async (req, res) => {
       success: true
     })
   } catch (error) {
+    if (error.message.includes('Fecha inválida')) {
+      return res.status(400).json({
+        message: error.message,
+        success: false
+      })
+    }
     httpError(res, error)
   }
 }

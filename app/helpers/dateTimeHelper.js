@@ -1,13 +1,13 @@
 import { Temporal } from '@js-temporal/polyfill'
 
 const getCurrentDateTimeISO = () => {
-  return Temporal.Now.plainDateTimeISO().toString()
+  return Temporal.Now.instant().toString(); // Usar Instant para obtener la fecha y hora actual
 }
 
 const addMillisecondsToCurrentDateTime = (milliseconds) => {
-  const now = Temporal.Now.plainDateTimeISO()
-  const futureTime = now.add({ milliseconds })
-  return futureTime.toString()
+  const now = Temporal.Now.instant(); // Usar Instant para manejar tiempo absoluto
+  const futureTime = now.add({ milliseconds });
+  return futureTime.toString(); // Devuelve la fecha en formato ISO
 }
 
 const addDaysToDate = (date, days) => {

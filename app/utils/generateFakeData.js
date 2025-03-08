@@ -21,12 +21,29 @@ const getRandomInt = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
+const createAdminUser = async () => {
+  const adminUser = {
+    userName: 'admin',
+    name: 'admin',
+    email: 'admin@secretary.com',
+    password: 'Admin123456',  // Cumple con la validación: mínimo 8 caracteres, letra y número
+    role: 'admin'
+  }
+
+  try {
+    await createFakeUserDirect(adminUser)
+    console.log('Usuario administrador creado exitosamente')
+  } catch (error) {
+    console.error('Error al crear usuario administrador:', error)
+  }
+}
+
 const createFakeUser = async () => {
   const user = {
-    userName: faker.internet.username(),
+    userName: faker.internet.userName().toLowerCase(),
     name: faker.person.fullName(),
-    email: faker.internet.email(),
-    password: faker.internet.password(),
+    email: faker.internet.email().toLowerCase(),
+    password: `${faker.internet.password(8)}Aa1`, // Asegura que cumpla con la validación
     role: 'user'
   }
 
@@ -34,39 +51,47 @@ const createFakeUser = async () => {
 }
 
 const createFakeAppointment = async () => {
+  const date = faker.date.future();
   const appointment = {
-    patient: faker.person.fullName(),
-    doctor: faker.person.fullName(),
-    date: faker.date.future().toISOString(),
-    time: `${getRandomInt(0, 23)}:${getRandomInt(0, 59)}`,
+    patientName: faker.person.fullName(),
+    doctorName: faker.person.fullName(),
+    appointmentDate: date.toISOString().split('T')[0],
+    appointmentTime: `${String(getRandomInt(8, 17)).padStart(2, '0')}:${String(getRandomInt(0, 59)).padStart(2, '0')}`,
+    reason: faker.lorem.sentence(),
     status: 'scheduled'
   }
 
-  await createFakeAppointmentDirect(appointment)
-  console.log('Fake appointment created:', appointment)
+  try {
+    await createFakeAppointmentDirect(appointment)
+    console.log('Cita creada:', appointment)
+  } catch (error) {
+    console.error('Error al crear cita:', error.message)
+  }
 }
 
-const generateFakeData = async (numUsers = 1000, numAppointments = 1000) => {
+const generateFakeData = async (numUsers = 10, numAppointments = 20) => {
+  // Primero crear el usuario administrador
+  await createAdminUser()
+
+  // Luego crear usuarios regulares
   for (let i = 0; i < numUsers; i++) {
     await createFakeUser()
   }
+
+  // Finalmente crear citas
   for (let i = 0; i < numAppointments; i++) {
     await createFakeAppointment()
   }
 }
 
-dbconnect().then(() => {
-  generateFakeData()
-    .then(() => {
-      console.log('Fake data generated')
-      return deleteUsersExceptJmro()
-    })
-    .then(() => {
-      console.log('Users deleted except those with username starting with "jmro"')
-      process.exit()
-    })
-    .catch((error) => {
-      console.error('Error:', error)
-      process.exit(1)
-    })
+dbconnect().then(async () => {
+  try {
+    // Crear solo el usuario admin
+    await createAdminUser()
+    console.log('Datos de prueba generados exitosamente')
+    process.exit(0)
+  } catch (error) {
+    console.error('Error al generar datos:', error)
+    process.exit(1)
+  }
 })
