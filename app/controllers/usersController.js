@@ -5,10 +5,16 @@ import {
   deleteUser,
   getUserByUserName
 } from '../repositories/usersRepository.js'
-import { getCurrentDateTimeISO, addMillisecondsToCurrentDateTime } from '../helpers/dateTimeHelper.js'
+import { getCurrentDateTimeISO } from '../helpers/dateTimeHelper.js'
 import bcrypt from 'bcrypt'
 import httpError from '../helpers/handleErrors.js'
 import { generateToken, setToken } from '../helpers/token.js'
+import { validateUserCredentials } from '../helpers/validateHelpers.js'
+import { checkUserExistenceAndLockStatus } from '../helpers/validateHelpers.js';
+import { verifyPassword } from '../helpers/validateHelpers.js';
+
+
+
 
 const registerUserController = async (req, res, next) => {
   try {
@@ -36,62 +42,14 @@ const registerUserController = async (req, res, next) => {
 
 const loginUserController = async (req, res, next) => {
   try {
-    const { userName, password } = req.body
+    const validationError = validateUserCredentials(req, res);
+    if (validationError) return;
 
-    // Validar campos requeridos
-    if (!userName?.trim()) {
-      return res.status(400).json({
-        message: 'El nombre de usuario es requerido',
-        success: false
-      })
-    }
+    const user = await checkUserExistenceAndLockStatus(req.body.userName, res);
+    if (!user) return;
 
-    if (!password) {
-      return res.status(400).json({
-        message: 'La contraseña es requerida',
-        success: false
-      })
-    }
-
-    const user = await getUserByUserName(userName)
-    if (!user) {
-      return res.status(401).json({
-        message: 'Usuario no encontrado',
-        success: false
-      })
-    }
-
-    if (user.isLocked && user.lockUntil > getCurrentDateTimeISO()) {
-      const waitMinutes = Math.ceil((new Date(user.lockUntil) - new Date()) / 60000)
-      return res.status(401).json({
-        message: `Usuario bloqueado. Inténtelo nuevamente en ${waitMinutes} minutos.`,
-        success: false,
-        lockUntil: user.lockUntil
-      })
-    }
-
-    const isMatch = await bcrypt.compare(password, user.password)
-    if (!isMatch) {
-      const loginAttempts = (user.loginAttempts || 0) + 1
-      const maxAttempts = 3
-      const isLocked = loginAttempts >= maxAttempts
-      const lockUntil = isLocked ? addMillisecondsToCurrentDateTime(300000) : null
-
-      await updateUser(user._id, { loginAttempts, isLocked, lockUntil })
-
-      if (isLocked) {
-        return res.status(401).json({
-          message: 'Demasiados intentos fallidos. Usuario bloqueado por 5 minutos.',
-          success: false,
-          lockUntil
-        })
-      }
-
-      return res.status(401).json({
-        message: `Usuario o contraseña incorrectos. Le quedan ${maxAttempts - loginAttempts} intentos.`,
-        success: false
-      })
-    }
+   const isPasswordValid = await verifyPassword(password, user.password, res);
+   if (!isPasswordValid) return
 
     const token = generateToken(user)
     setToken(res, token)
@@ -229,6 +187,5 @@ const deleteUserController = async (req, res, next) => {
     next(error)
   }
 }
-
 
 export { getUsersController, getUserController, createUserController, updateUserController, deleteUserController, registerUserController, loginUserController, logoutUserController }
