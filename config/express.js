@@ -1,10 +1,9 @@
-import express from 'express'
 import index from '../app/routes/index.js'
 import securityMiddleware from '../app/middlewares/securityMiddleware.js'
 import logMiddleware from '../app/middlewares/logMiddleware.js'
 
 const expressConfig = (app) => {
-  // Middlewares básicos
+  // Middleware para registrar logs
   app.use(logMiddleware)
 
   // Middlewares de seguridad
